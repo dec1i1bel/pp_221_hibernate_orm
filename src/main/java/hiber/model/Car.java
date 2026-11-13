@@ -5,9 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cars")
@@ -22,17 +21,12 @@ public class Car {
     @Column(nullable = false)
     private int series;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
     public Car() {
     }
 
-    public Car(String model, int series, User user) {
+    public Car(String model, int series) {
         this.model = model;
         this.series = series;
-        this.user = user;
     }
 
     public long getId() {
@@ -55,11 +49,29 @@ public class Car {
         this.series = series;
     }
 
-    public User getUser() {
-        return user;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Car car = (Car) obj;
+
+        return Objects.equals(model, car.model) &&
+                Objects.equals(series, car.series);
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    @Override
+    public int hashCode() {
+        return Objects.hash(model, series);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Car {id: %d, model: %s, series: %s}", id, model, series);
     }
 }
